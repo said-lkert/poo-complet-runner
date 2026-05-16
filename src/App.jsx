@@ -431,6 +431,7 @@ export default function App() {
   const [active, setActive] = useState("heritage");
   const [showOutput, setShowOutput] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const current = sections.find(s => s.id === active);
 
@@ -450,7 +451,7 @@ export default function App() {
       flexDirection: "column",
     }}>
       {/* Header */}
-      <div style={{
+      <div className="app-header" style={{
         background: "linear-gradient(135deg, #161b22 0%, #1c2128 100%)",
         borderBottom: "1px solid #30363d",
         padding: "20px 24px",
@@ -458,6 +459,16 @@ export default function App() {
         alignItems: "center",
         gap: 12,
       }}>
+        <button
+          className="menu-toggle"
+          onClick={() => setSidebarOpen(open => !open)}
+          aria-label={sidebarOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-expanded={sidebarOpen}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
         <span style={{ fontSize: 28 }}>🐍</span>
         <div>
           <div style={{ fontSize: 18, fontWeight: 700, color: "#e6edf3", letterSpacing: 1 }}>
@@ -469,9 +480,14 @@ export default function App() {
         </div>
       </div>
 
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div className="app-content" style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <button
+          className={`sidebar-backdrop ${sidebarOpen ? "is-open" : ""}`}
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Fermer le menu"
+        />
         {/* Sidebar */}
-        <div style={{
+        <div className={`sidebar ${sidebarOpen ? "is-open" : ""}`} style={{
           width: 200,
           background: "#161b22",
           borderRight: "1px solid #30363d",
@@ -484,7 +500,11 @@ export default function App() {
           {sections.map(s => (
             <button
               key={s.id}
-              onClick={() => { setActive(s.id); setShowOutput(false); }}
+              onClick={() => {
+                setActive(s.id);
+                setShowOutput(false);
+                setSidebarOpen(false);
+              }}
               style={{
                 background: active === s.id ? "#1f2937" : "transparent",
                 border: "none",
@@ -506,7 +526,7 @@ export default function App() {
         </div>
 
         {/* Main */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div className="main-panel" style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {/* Tab bar */}
           <div style={{
             background: "#161b22",
